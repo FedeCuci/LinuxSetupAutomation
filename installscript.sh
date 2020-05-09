@@ -1,20 +1,58 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # https://askubuntu.com/questions/744310/bash-download-latest-version-of-program-from-website-via-terminal
 
+# Add custom dependencies
+sudo add-apt-repository ppa:bashtop-monitor/bashtop
+
+printf "Updating repos and upgrading the system...\n"
+sleep 2
 sudo apt-get update && sudo apt-get upgrade -y;
+sudo apt-get dist-upgrade -y;
+
+
+# Remove vim
+printf "Removing vim..."
+sleep 2
+sudo apt remove vim;
 
 # Install all preferred programs
 
-apt_packages=(gnome-tweaks hashcat gparted nmap tor git neovim python3-pip zim tmux ripgrep dconf-editor mlocate gobuster deluge vlc virtualenv timeshift);
+printf "Installing apt packages...\n"
+sleep 2
+apt_packages=(gnome-tweaks hashcat gparted nmap tor git neovim python3-pip tmux ripgrep dconf-editor mlocate gobuster qbittorrent mpv virtualenv timeshift vifm kazam doas feh gnome-boxes gimp steam wireguard openvpn golang-go bashtop apache2 zsh gnome-shell-extensions);
 
-sudo apt install $apt_packages; -y &
+for i in "${apt_packages[@]}"
+do
+        sudo apt install $i -y
+done
 
 # Snap packages
 
-snap_packages=(discord bitwarden authy);
+printf "Installing snap packages..."
+sleep 2
+snap_packages=(discord bitwarden authy cointop);
 
-sudo snap install $snap_packages; -y &
+for i in "${snap_packages[@]}"
+do
+	sudo snap install $i -y
+done
+
+# Install zshell
+$ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# Vim-Plug installation
+printf "Downloading Vim-Plug..."
+sleep 2
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim';
+
+
+# Creat SSH key pair using the ed25519 protocol
+
+printf "Creating ssh key..."
+sleep 2
+ssh_keygen -t ed25519 -C "fede.cuci@mailbox.org"
 
 # MEGA
 function mega() {
@@ -39,5 +77,13 @@ function ulauncher () {
     rm "ulauncher_${ulauncher_version}_all.deb";
 }
 
-mega & mullvad & ulauncher
+# Setup git configuration variables
+git config --global user.email "fede.cuci@mailbox.org"
+git config --global user.name "Federico Cucinotta"
+
+# Run the functions above.
+mega;
+mullvad;
+ulauncher;
+
 
