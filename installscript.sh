@@ -8,39 +8,59 @@ sudo apt-get update && sudo apt-get upgrade -y;
 sudo apt-get dist-upgrade -y;
 clear -x
 
+# Creat SSH key pair using the ed25519 protocol
+printf "Creating ssh key..."
+sleep 2
+ssh-keygen -t ed25519 -C "fede.cuci@mailbox.org"
+
 # Add custom dependencies
 sudo add-apt-repository ppa:bashtop-monitor/bashtop # for bashtop
+echo "deb https://deb.etcher.io stable etcher" | sudo tee /etc/apt/sources.list.d/balena-etcher.list
+sudo apt-key adv --keyserver hkps://keyserver.ubuntu.com:443 --recv-keys 379CE192D401AB61
+sudo apt update
+sudo apt-get install balena-etcher-electron
 
 # Remove pre-installed unwanted applications 
 clear -x
 printf "Removing unwanted pre-installed applications..."
 sleep 2
 useless=(gnome-todo-common gnome-todo-common libgnome-todo remmina-common remmina-common remmina-plugin-secret remmina-plugin-secret remmina librhythmbox-core10 rhythmbox-data rhythmbox rhythmbox-plugin-alternative-toolbar rhythmbox-plugins seahorse aisleriot gnome-sudoku gnome-mines gnome-mahjongg)
+
 for i in "${useless[@]}"
 do
+	clear -x
+	printf "Removing ${i} \n"
+	sleep 1
 	sudo apt remove $i -y;
-done
-clear -x
-
-# Install all preferred programs
-printf "Installing apt packages...\n"
-sleep 2
-apt_packages=(gdebi gnome-tweaks hashcat gparted nmap tor git neovim python3-pip tmux ripgrep dconf-editor mlocate gobuster qbittorrent mpv virtualenv timeshift vifm kazam doas feh gnome-boxes steam wireguard openvpn golang-go bashtop apache2 zsh gnome-shell-extensions curl);
-
-for i in "${apt_packages[@]}"
-do
-        sudo apt install $i -y
 done
 clear -x
 
 # Snap packages
 printf "Installing snap packages..."
 sleep 2
-snap_packages=(spotify discord bitwarden cointop gimp); #add authy
+snap_packages=(bitwarden spotify signal-desktop discord cointop gimp); #add authy
 
 for i in "${snap_packages[@]}"
 do
 	sudo snap install $i 
+done
+
+#Install Authy
+sudo snap install authy --beta
+
+clear -x
+
+# Install all preferred programs
+printf "Installing apt packages...\n"
+sleep 2
+apt_packages=(wireshark hydra hydra-gtk aircrack-ng gdebi gnome-tweaks hashcat gparted nmap tor git neovim python3-pip tmux ripgrep dconf-editor mlocate gobuster qbittorrent mpv virtualenv timeshift vifm kazam feh gnome-boxes steam wireguard openvpn golang-go bashtop apache2 zsh gnome-shell-extensions curl);
+
+for i in "${apt_packages[@]}"
+do
+	clear -x
+	printf "Installing ${i}\n"
+	sleep 1
+        sudo apt install $i -y
 done
 clear -x
 
@@ -51,11 +71,6 @@ sleep 2
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim';
 clear -x
-
-# Creat SSH key pair using the ed25519 protocol
-printf "Creating ssh key..."
-sleep 2
-ssh_keygen -t ed25519 -C "fede.cuci@mailbox.org"
 
 # MEGA
 function mega() {
@@ -92,8 +107,8 @@ git config --global user.email "fede.cuci@mailbox.org"
 git config --global user.name "Federico Cucinotta"
 
 # Run the functions above.
-mega;
-mullvad;
+#mega;
+#mullvad;
 
 # Install zshell
 clear -x
@@ -101,4 +116,4 @@ printf "Installing zshell..."
 sleep 2
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-
+sudo apt autoremove -y

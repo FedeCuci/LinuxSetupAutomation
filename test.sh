@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo adduser testuser
+echo "hello"
