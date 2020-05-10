@@ -15,9 +15,9 @@ ssh-keygen -t ed25519 -C "fede.cuci@mailbox.org"
 
 # Add custom dependencies
 sudo add-apt-repository ppa:bashtop-monitor/bashtop # for bashtop
-echo "deb https://deb.etcher.io stable etcher" | sudo tee /etc/apt/sources.list.d/balena-etcher.list
-sudo apt-key adv --keyserver hkps://keyserver.ubuntu.com:443 --recv-keys 379CE192D401AB61
-sudo apt update
+echo "deb https://deb.etcher.io stable etcher" | sudo tee /etc/apt/sources.list.d/balena-etcher.list #Add Etcher debian repository
+sudo apt-key adv --keyserver hkps://keyserver.ubuntu.com:443 --recv-keys 379CE192D401AB61 #Trust Bintray.com's GPG key
+sudo apt update 
 sudo apt-get install balena-etcher-electron
 
 # Remove pre-installed unwanted applications 
@@ -50,7 +50,7 @@ sudo snap install authy --beta
 
 clear -x
 
-# Install all preferred programs
+# Install all wanted apt programs
 printf "Installing apt packages...\n"
 sleep 2
 apt_packages=(wireshark hydra hydra-gtk aircrack-ng gdebi gnome-tweaks hashcat gparted nmap tor git neovim python3-pip tmux ripgrep dconf-editor mlocate gobuster qbittorrent mpv virtualenv timeshift vifm kazam feh gnome-boxes steam wireguard openvpn golang-go bashtop apache2 zsh gnome-shell-extensions curl);
