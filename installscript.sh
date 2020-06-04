@@ -51,13 +51,10 @@ sudo snap install authy --beta
 
 clear -x
 
-# Install Rust
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
 # Install all wanted apt programs
 printf "Installing apt packages...\n"
 sleep 2
-apt_packages=(xclip wireshark hydra hydra-gtk aircrack-ng gdebi gnome-tweaks hashcat gparted nmap tor git neovim python3-pip tmux ripgrep dconf-editor mlocate gobuster qbittorrent mpv virtualenv timeshift vifm kazam feh gnome-boxes steam wireguard openvpn golang-go bashtop apache2 zsh gnome-shell-extensions curl);
+apt_packages=(tmuxinator zathura xclip wireshark hydra hydra-gtk aircrack-ng gdebi gnome-tweaks hashcat gparted nmap tor git neovim python3-pip tmux ripgrep dconf-editor mlocate gobuster qbittorrent mpv virtualenv timeshift vifm kazam feh gnome-boxes steam wireguard openvpn golang-go bashtop apache2 zsh gnome-shell-extensions curl);
 
 for i in "${apt_packages[@]}"
 do
@@ -68,6 +65,8 @@ do
 done
 clear -x
 
+# Install Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # Vim-Plug installation
 printf "Downloading Vim-Plug..."
@@ -75,6 +74,53 @@ sleep 2
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim';
 clear -x
+
+# Download gruvbox theme for the terminal
+wget https://github.com/Mayccoll/Gogh/blob/master/themes/gruvbox-dark.sh
+./gruvbox-dark.sh
+# Set gruvbox as default theme in terminal setttings
+
+
+# Create directory for neovim configuration
+mkdir $HOME/.config/nvim
+
+# Setup git configuration variables
+git config --global user.email "fede.cuci@mailbox.org"
+git config --global user.name "Federico Cucinotta"
+
+# Clone tmux themes
+git clone https://github.com/jimeh/tmux-themepack.git ~/.tmux-themepack
+
+# Download tmux plugin manager
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+#Clone repo containing dotfiles
+git clone https://gitlab.com/FedeCuci/dotfiles.git $HOME/.dotfiles
+
+# Create symbolic links for dotfiles in the home directory
+ln -fs $HOME/.dotfiles/.bashrc $HOME/.bashrc
+ln -fs $HOME/.dotfiles/.zshrc $HOME/.zshrc
+ln -fs $HOME/.dotfiles/.tmux.conf $HOME/.tmux.conf
+ln -fs $HOME/.dotfiles/init.vim $HOME/.config/nvim/init.vim
+
+# Reload tmux conf
+tmux source ~/.tmux.conf
+
+git init $HOME/.dotfiles/
+
+# Run the functions above.
+#mega;
+#mullvad;
+
+# Install zshell
+clear -x
+printf "Installing zshell..."
+sleep 2
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+sudo apt autoremove -y
+
+# ___________________________________________________________________
 
 # MEGA
 function mega() {
@@ -105,33 +151,3 @@ function ulauncher () {
     sudo dpkg -i "ulauncher_${ulauncher_version}_all.deb";
     rm "ulauncher_${ulauncher_version}_all.deb";
 }
-
-# Create directory for neovim configuration
-mkdir $HOME/.config/nvim
-
-# Setup git configuration variables
-git config --global user.email "fede.cuci@mailbox.org"
-git config --global user.name "Federico Cucinotta"
-
-#Clone repo containing dotfiles
-git clone https://gitlab.com/FedeCuci/dotfiles.git $HOME/.dotfiles
-
-# Create symbolic links for dotfiles in the home directory
-ln -fs $HOME/.dotfiles/.bashrc $HOME/.bashrc
-ln -fs $HOME/.dotfiles/.zshrc $HOME/.zshrc
-ln -fs $HOME/.dotfiles/.tmux.conf $HOME/.tmux.conf
-ln -fs $HOME/.dotfiles/init.vim $HOME/.config/nvim/init.vim
-
-git init $HOME/.dotfiles/
-
-# Run the functions above.
-#mega;
-#mullvad;
-
-# Install zshell
-clear -x
-printf "Installing zshell..."
-sleep 2
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-sudo apt autoremove -y
