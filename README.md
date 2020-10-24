@@ -85,3 +85,5 @@ Add applicatoins to favorites on dock
     - apache2
     - zsh
 
+When buying a new laptop and install Ubuntu on it, there are a few things to make sure of so that everything works. Proper drives for the network card and graphics card need to be installed. On top of that, secure boot needs to be disabled. 
+
